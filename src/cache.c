@@ -134,7 +134,8 @@ icache_access(uint32_t addr)
   //TODO: Implement I$
   //
   icacheRefs++;
-  
+  if(blocksize==0) return memspeed;
+  if(icacheSets==0 | icacheAssoc==0) return l2cache_access(addr);
   uint32_t index = ((addr/blocksize) & (icacheSets -1)); 
   uint32_t tag = addr/(blocksize * icacheSets);
   for(int i=0; i<icacheAssoc ; i++){
@@ -185,7 +186,8 @@ dcache_access(uint32_t addr)
   //TODO: Implement D$
   //
     dcacheRefs++;
-  
+  if(blocksize==0) return memspeed;
+  if(dcacheSets==0 | dcacheAssoc==0) return l2cache_access(addr);
   uint32_t index = ((addr/blocksize) & (dcacheSets -1)); 
   uint32_t tag = addr/(blocksize * dcacheSets);
   for(int i=0; i<dcacheAssoc ; i++){
@@ -236,7 +238,7 @@ l2cache_access(uint32_t addr)
   //TODO: Implement L2$
   //
   l2cacheRefs++;
-  
+  if(blocksize==0 | l2cacheSets==0) return memspeed;
   uint32_t index = ((addr/blocksize) & (l2cacheSets -1)); 
   uint32_t tag = addr/(blocksize * l2cacheSets);
   for(int i=0; i<l2cacheAssoc ; i++){
